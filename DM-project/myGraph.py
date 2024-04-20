@@ -65,29 +65,31 @@ class Graph:
 
 
 # usage
-g = Graph()
+def main():
+    g = Graph()
 
-g.add_node('A')
-g.add_node('B')
-g.add_node('C')
+    g.add_node('A')
+    g.add_node('B')
+    g.add_node('C')
 
-g.add_edge('A', 'B', 2.5)
-g.add_edge('B', 'C', 1.8)
-g.add_edge('C', 'A', 3.2)
+    g.add_edge('A', 'B', 2.5)
+    g.add_edge('B', 'C', 1.8)
+    g.add_edge('C', 'A', 3.2)
 
-# copy  without edges
-copied_g = g.copy_without_edges()
-copied_g.add_edge('B', 'C', 5.8)  # test
+    # copy  without edges
+    copied_g = g.copy_without_edges()
+    copied_g.add_edge('B', 'C', 5.8)  # test
 
-# # Plot both graphs in one canvas with identical node positions
-# plt.figure(figsize=(8, 6))  # useless
 
-# original graph
-g.plot_graph(title='Original Graph')
-plt.pause(2)
+    # original graph
+    g.plot_graph(title='Original Graph')
+    plt.pause(2)
 
-# graph without edges using the same node positions
-copied_g.plot_graph(title='Copied Graph (No Edges)', v_color="#FF3131", e_color="#7DF848")
+    # graph without edges using the same node positions
+    copied_g.plot_graph(title='Copied Graph (No Edges)', e_color="#7DF848")
 
-# plt.tight_layout()  # Adjust layout to prevent overlapping??? delete for later
-plt.show()
+    plt.show()
+
+
+if __name__ == '__main__':
+    main()
