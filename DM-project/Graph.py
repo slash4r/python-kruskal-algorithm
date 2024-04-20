@@ -26,13 +26,21 @@ class Graph:
             self.nodes_dict[name] = Node(name)
 
     def add_edge(self, name1: str, name2: str, weight: float = 1.0) -> None:
-        """Add an edge between two nodes with an optional weight."""
+        """Add an edge between two nodes with an optional weight (1 by default)."""
         if name1 in self.nodes_dict and name2 in self.nodes_dict:
             node1 = self.nodes_dict[name1]
             node2 = self.nodes_dict[name2]
             node1.add_neighbor(node2, weight)
 
-    def plot_graph(self) -> None:
+    def copy_without_edges(self) -> 'Graph':
+        """Create a copy of the graph without any edges (only nodes)."""
+        copied_graph = Graph()
+        # Add all nodes from the original graph to the copied graph
+        for node_name in self.nodes_dict:
+            copied_graph.add_node(node_name)
+        return copied_graph
+
+    def plot_graph(self, title: str = 'Graph Visualization', v_color: str = "#E4E0DC", e_color: str = "#5271FF") -> None:
         """Plot the graph using networkx and matplotlib."""
         G = nx.Graph()
 
@@ -45,18 +53,15 @@ class Graph:
                 G.add_edge(node.name, neighbor.name, weight=weight)
                 edge_labels[(node.name, neighbor.name)] = f'{weight:.2f}'  # format weight for display
 
-        # compute node positions using a spring layout algorithm to achieve a visually appealing layout!
-        pos = nx.spring_layout(G)
+        # Use a fixed layout for consistent node positions
+        pos = nx.circular_layout(G)  # can also try other layouts like nx.shell_layout(G)
 
-        # draw the graph
-        nx.draw(G, pos, with_labels=True, node_color='#FF3131', node_size=400, font_size=12, font_color='black',
-                font_weight='bold', edge_color='#5271FF', linewidths=1, width=2)
-
+        # Draw the graph with fixed node positions
+        nx.draw(G, pos, with_labels=True, node_color=v_color, node_size=400, font_size=12,
+                font_color='black', font_weight='bold', edge_color=e_color, linewidths=1, width=2)
         # draw edge labels
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red', font_size=10)
-
-        plt.title('Graph Visualization')
-        plt.show()
+        plt.title(title)
 
 
 # usage
@@ -70,4 +75,19 @@ g.add_edge('A', 'B', 2.5)
 g.add_edge('B', 'C', 1.8)
 g.add_edge('C', 'A', 3.2)
 
-g.plot_graph()
+# copy  without edges
+copied_g = g.copy_without_edges()
+copied_g.add_edge('B', 'C', 5.8)  # test
+
+# # Plot both graphs in one canvas with identical node positions
+# plt.figure(figsize=(8, 6))  # useless
+
+# original graph
+g.plot_graph(title='Original Graph')
+plt.pause(2)
+
+# graph without edges using the same node positions
+copied_g.plot_graph(title='Copied Graph (No Edges)', v_color="#FF3131", e_color="#7DF848")
+
+# plt.tight_layout()  # Adjust layout to prevent overlapping??? delete for later
+plt.show()
