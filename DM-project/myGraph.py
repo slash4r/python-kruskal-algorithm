@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -6,7 +6,7 @@ import random
 
 
 class Node:
-    def __init__(self, name: str):
+    def __init__(self, name: int):
         self.name = name
         self.neighbors = []  # adjacency list -- List<(Node, weight)>
 
@@ -18,33 +18,38 @@ class Node:
 
 
 class Graph:
-    def __init__(self):
-        self.nodes_dict: Dict[str, Node] = {}  # dict to store nodes (key: name, value: object Node)
+    def __init__(self, count=0):
+        self.nodes_dict: Dict[int, Node] = {}  # dict to store nodes (key: name, value: object Node)
+        if count != 0:
+            self.adjacency_matrix = [[False] * count] * count
+        else:
+            self.adjacency_matrix: List[List[float, bool]] = []  # adjacency matrix (contains weighs)
+        self.nodes_count = count
 
-    def add_node(self, name: str) -> None:
+    def add_node(self, name: int) -> None:
         """Add a node to the graph."""
         if name not in self.nodes_dict:
             self.nodes_dict[name] = Node(name)
+            self.adjacency_matrix.append([False] * len(self.adjacency_matrix))  # append new row with False (no edges)
+            for row in self.adjacency_matrix:
+                row.append(False)
+            self.nodes_count += 1
 
-    def add_edge(self, name1: str, name2: str, weight: float = 1.0) -> None:
+    def add_edge(self, name1: int, name2: int, weight: float = 1.0) -> None:
         """Add an edge between two nodes with an optional weight (1 by default)."""
         if name1 in self.nodes_dict and name2 in self.nodes_dict:
             node1 = self.nodes_dict[name1]
             node2 = self.nodes_dict[name2]
             node1.add_neighbor(node2, weight)
+            # print(name1, name2, "test")
+            self.adjacency_matrix[name1 - 1][name2 - 1] = weight
+            self.adjacency_matrix[name2 - 1][name1 - 1] = weight
         else:
             print("Error! At least one of the nodes does not exist!")
 
-    def copy_without_edges(self) -> 'Graph':
-        """Create a copy of the graph without any edges (only nodes)."""
-        copied_graph = Graph()
-        # Add all nodes from the original graph to the copied graph
-        for node_name in self.nodes_dict:
-            copied_graph.add_node(node_name)
-        return copied_graph
-
     def plot_graph(self, pos=None, title: str = 'Graph Visualization', v_color: str = "#E4E0DC", e_color: str = "#5271FF") -> dict:
-        """Plot the graph using networkx and matplotlib."""
+        """Plot the graph using networkx and matplotlib.\n
+        We use here an adjacency list, we do not consider adjacency matrix though."""
         G = nx.Graph()
 
         # add all nodes to the networkx graph, so unconnected will be spotted
@@ -73,20 +78,20 @@ class Graph:
             raise ValueError("Graph is not empty!")
 
         if size <= 0:
-                raise ValueError("Graph size must be a positive integer.")
+            raise ValueError("Graph size must be a positive integer.")
 
         if density < 0 or density > 1:
             raise ValueError("Density must be a float between 0.0 and 1.0")
 
         for i in range(size):
-            node_name = str(i)  # Use integers as node names
+            node_name = i + 1  # Use integers as node names
             self.add_node(node_name)
 
         for i in range(size):
             for j in range(i + 1, size):  # upper triangle of adjacency matrix
-                if random.random() < density: # add edges based on density
-                    node_i = str(i)
-                    node_j = str(j)
+                if random.random() < density:  # add edges based on density
+                    node_i = i + 1
+                    node_j = j + 1
                     weight = random.uniform(-5, 45)  # random weight between
                     self.add_edge(node_i, node_j, weight)
         return self
@@ -96,20 +101,20 @@ class Graph:
 def main():
     g = Graph()
 
-    g.add_node('A')
-    g.add_node('B')
-    g.add_node('C')
+    g.add_node(1)
+    g.add_node(2)
+    g.add_node(3)
 
-    g.add_edge('A', 'B', 2.5)
-    g.add_edge('B', 'C', 1.8)
-    g.add_edge('C', 'A', 3.2)
+    g.add_edge(1, 2, 2.5)
+    g.add_edge(2, 3, 1.8)
+    g.add_edge(3, 1, 3.2)
 
     # copy  without edges
     # copied_g = g.copy_without_edges()
     copied_g = Graph()
-    copied_g.add_node('B')
-    copied_g.add_node('C')
-    copied_g.add_edge('B', 'C', 1.8)  # test
+    copied_g.add_node(2)
+    copied_g.add_node(3)
+    copied_g.add_edge(2, 3, 1.8)  # test
 
     # original graph
     original_pos = g.plot_graph(title='Original Graph')
