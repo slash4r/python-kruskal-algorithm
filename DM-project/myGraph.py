@@ -87,7 +87,7 @@ class Graph:
                 if random.random() < density: # add edges based on density
                     node_i = str(i)
                     node_j = str(j)
-                    weight = random.uniform(-10, 25)  # random weight between
+                    weight = random.uniform(-5, 45)  # random weight between
                     self.add_edge(node_i, node_j, weight)
         return self
 
