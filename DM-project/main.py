@@ -1,0 +1,6 @@
+from Kruskal import MSTKruskal, Graph, visualize_solution
+
+g = Graph().generate_random_graph(20, 0.4)
+
+mst_edges = MSTKruskal(g).kruskal_mst()
+visualize_solution(g, mst_edges)
