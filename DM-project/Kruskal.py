@@ -75,7 +75,7 @@ class MSTKruskal:
             print(f"Number of operations: {int(self.count_operations)} (approximately)")
 
         if return_info:
-            return mst_edges, execution_time, self.count_operations
+            return mst_edges, execution_time, int(self.count_operations)
         return mst_edges
 
     def get_sorted_edges(self) -> PriorityQueue:
