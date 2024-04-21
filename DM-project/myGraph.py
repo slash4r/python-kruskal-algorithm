@@ -56,7 +56,7 @@ class Graph:
                 edge_labels[(node.name, neighbor.name)] = f'{weight:.2f}'  # format weight for display
         if not pos:
             # Use a fixed layout for consistent node positions
-            pos = nx.circular_layout(G)  # can also try other layouts like nx.shell_layout(G)
+            pos = nx.spring_layout(G)  # can also try other layouts like nx.shell_layout(G)
 
         # Draw the graph with fixed node positions
         nx.draw(G, pos, with_labels=True, node_color=v_color, node_size=400, font_size=12,
