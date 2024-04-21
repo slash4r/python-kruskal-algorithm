@@ -2,6 +2,7 @@ from typing import Dict
 
 import matplotlib.pyplot as plt
 import networkx as nx
+import random
 
 
 class Node:
@@ -65,6 +66,30 @@ class Graph:
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red', font_size=6)
         plt.title(title)
         return pos
+
+    def generate_random_graph(self, size: int, density: float) -> 'Graph':
+        """Generate a random graph of given size and density."""
+        if len(self.nodes_dict) != 0:
+            raise ValueError("Graph is not empty!")
+
+        if size <= 0:
+                raise ValueError("Graph size must be a positive integer.")
+
+        if density < 0 or density > 1:
+            raise ValueError("Density must be a float between 0.0 and 1.0")
+
+        for i in range(size):
+            node_name = str(i)  # Use integers as node names
+            self.add_node(node_name)
+
+        for i in range(size):
+            for j in range(i + 1, size):  # upper triangle of adjacency matrix
+                if random.random() < density: # add edges based on density
+                    node_i = str(i)
+                    node_j = str(j)
+                    weight = random.uniform(-10, 25)  # random weight between
+                    self.add_edge(node_i, node_j, weight)
+        return self
 
 
 # usage

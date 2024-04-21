@@ -39,6 +39,14 @@ class MSTKruskal:
                 uf.union_groups(u, v)
                 mst_edges.append((u, v, weight))
 
+        text_result = "Minimum Spanning Tree (Kruskal's Algorithm):\n"
+        for edge in mst_edges:
+            v = edge[0]
+            u = edge[1]
+            w = edge[2]
+
+            text_result += f"{v} -- {u} : {w}\n"
+        print(text_result)
         return mst_edges
 
     def get_sorted_edges(self) -> List[Tuple[str, str, float]]:
@@ -51,6 +59,26 @@ class MSTKruskal:
         # sort edges based on weight (3 element in tuple)
         edges.sort(key=lambda x: x[2])
         return edges
+
+
+def visualize_solution(graph: Graph, mst_edges: List[tuple[str, str, float]]):
+    # original graph
+    original_pos = graph.plot_graph(title='Original Graph')
+
+    mst_g = Graph()
+
+    for edge in mst_edges:
+        v = edge[0]
+        u = edge[1]
+        w = edge[2]
+
+        mst_g.add_node(v)
+        mst_g.add_node(u)
+        mst_g.add_edge(v, u, w)
+
+        plt.pause(2)
+        mst_g.plot_graph(original_pos, title='Copied Graph (No Edges)', v_color="#FF3131", e_color="#7DF848")
+    plt.show()
 
 
 def main():
@@ -68,47 +96,11 @@ def main():
     g.add_edge('B', 'D', 2.0)
     g.add_edge('C', 'D', 2.5)
 
-    # original graph
-    original_pos = g.plot_graph(title='Original Graph')
-
     # Find MST
     mst_kruskal = MSTKruskal(g)
     mst_edges = mst_kruskal.kruskal_mst()
 
-    MSTg = Graph()
-    text_result = "Minimum Spanning Tree (Kruskal's Algorithm):\n"
-    for edge in mst_edges:
-        v = edge[0]
-        u = edge[1]
-        w = edge[2]
 
-        MSTg.add_node(v)
-        MSTg.add_node(u)
-        MSTg.add_edge(v, u, w)
-
-        text_result += f"{v} -- {u} : {w}\n"
-
-        plt.pause(2)
-        MSTg.plot_graph(original_pos, title='Copied Graph (No Edges)', v_color="#FF3131", e_color="#7DF848")
-
-    print(text_result)
-    plt.show()
-    # print("Minimum Spanning Tree (Kruskal's Algorithm):")
-    # for edge in mst_edges:
-    #     print(f"{edge[0]} -- {edge[1]} : {edge[2]}")
-
-    # # copy  without edges
-    # # copied_g = g.copy_without_edges()
-    # copied_g = Graph()
-    # copied_g.add_node('B')
-    # copied_g.add_node('C')
-    # copied_g.add_edge('B', 'C', 1.8)  # test
-    #
-    # print('test' + str(original_pos))
-    # plt.pause(2)
-    #
-    # # graph without edges using the same node positions
-    # copied_g.plot_graph(original_pos, title='Copied Graph (No Edges)', v_color="#FF3131", e_color="#7DF848")
 
 
 if __name__ == '__main__':
